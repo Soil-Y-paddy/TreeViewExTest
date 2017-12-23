@@ -2,3 +2,4 @@
 treeViewTest/.vs/
 treeViewTest/treeViewTest/bin/
 treeViewTest/treeViewTest/obj/
+*.bak
