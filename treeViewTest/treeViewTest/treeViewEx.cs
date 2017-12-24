@@ -97,52 +97,6 @@ namespace ControlExtends
 		}
 
 
-		/// <summary>
-		/// フルパスで指定されたツリービューノードを削除する 
-		/// </summary>
-		/// <param name="p_strPath">フルパス</param>
-		/// <param name="bSubDel">子ノードも削除する場合 true</param>
-		/// <returns></returns>
-		public bool RemoveNode( string p_strPath, bool bSubDel = true)
-		{
-			bool bRetVal = false;
-			// パスを分割する
-			string[] aryTree = p_strPath.Trim( PathSeparator.ToCharArray() ).Split(PathSeparator.ToCharArray());
-			TreeNodeCollection objPearent = null;// ルートの親
-			TreeNodeCollection objRoot = Nodes;
-			TreeNode objNode = null;
-			for (int nCnt = 0; nCnt < aryTree.Length; nCnt++)
-			{
-				//if (strNode == "") continue;
-				// すでに存在するか確認
-				TreeNode[] objFind = objRoot.Find(aryTree[nCnt], false); // findNode(root, mTreeI);
-
-				if (objFind.Length > 0)
-				{
-					objNode = objFind[0];
-					objPearent = objRoot;
-					objRoot = objNode.Nodes; // 見つけたノードの子パスをルートにする
-
-				}
-				else
-				{
-					objNode = null;
-				}
-			}
-			if (objPearent != null && objNode != null)
-			{
-				//bSub == false または 削除対象が子を持たないときは削除
-				if (bSubDel == true || objNode.Nodes.Count == 0)
-				{
-					objPearent.Remove(objNode);
-					// 削除出来たらtrue
-					bRetVal = true;
-				}
-			}
-
-			return bRetVal;
-
-		}
 
 
 	}

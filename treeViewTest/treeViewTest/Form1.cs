@@ -16,12 +16,13 @@ namespace treeViewTest
 
 		string[] m_aryPathTest = new string[]
 		{
-				@"a:\",
-				@"a:\alpha\",
-				@"a:\alpha\amount",
-				@"a:\alpha\anode",
-				@"a:\apple\",
-				@"b:\bete"
+				@"果物\",
+				@"果物\りんご\",
+				@"果物\りんご\りんごA",
+				@"果物\りんご\りんごB",
+				@"果物\みかん\",
+				@"野菜\ネギ\",
+
 		};
 
 		public Form1()
@@ -94,14 +95,15 @@ namespace treeViewTest
 		private void btnDel_Click(object sender, EventArgs e)
 		{
 			string strPath = txtEdit.Text;
-			TreeNode res = treeViewEx1.FindNode(strPath);
+			TreeNode objNode = treeViewEx1.FindNode(strPath);
 			bool bDelSub = true;
-			if(res.Nodes.Count > 0)
+			if(objNode.Nodes.Count > 0)
 			{
 				bDelSub = (MessageBox.Show("一緒に削除しますか？", "子ノードが存在します", MessageBoxButtons.YesNo) == DialogResult.Yes);
 			}
-			if(treeViewEx1.RemoveNode( txtEdit.Text, bDelSub))
+			if(bDelSub)
 			{
+				objNode.Remove();
 				toolLabel.Text = "削除しました。";
 			}
 			else
