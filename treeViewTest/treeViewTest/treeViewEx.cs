@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace ControlExtends
 {
@@ -25,37 +20,34 @@ namespace ControlExtends
 			
 			// パスを分割する
 			string[] aryTree = p_strPath.Split(PathSeparator.ToCharArray());
-			TreeNode objRoot = null;
-//			TreeNodeCollection objRoot = Nodes;
-			TreeNode objNode = null;
+			TreeNodeCollection objRoot = Nodes; // 追加先ノード
+			TreeNode objNode = null; // 追加対象
+
+			// パスを順にたどる
 			foreach (string strNode in aryTree)
 			{
 				if (strNode == "") continue;
-				// すでに存在するか確認 : ルートか子ノードで切り替え
-				TreeNode[] objFind = ((objRoot == null) ? Nodes : objRoot.Nodes).Find(strNode, false); 
+
+				// すでに存在するか確認
+				TreeNode[] objFind =  objRoot.Find(strNode, false); 
 
 				if (objFind.Length == 0)
 				{
-					// なかったら作成する
-					objNode = (p_nImageIndex == -1) ? new TreeNode(strNode) : new TreeNode(strNode,p_nImageIndex, p_nSelectedImageIndex);
-					objNode.Name = strNode; // Nameをパス名にする
-
-					// 追加：ルートか子ノードで切り替え
-					((objRoot == null) ? Nodes : objRoot.Nodes).Add(objNode);
-
-					if (objRoot != null) // 子ノードの場合展開する
+					// なかったら作成する : イメージIDが未設定 / 設定済みでオーバロード切り替え
+					objNode = (p_nImageIndex == -1) ? objRoot.Add(strNode, strNode)
+							: objRoot.Add(strNode, strNode, p_nImageIndex, p_nSelectedImageIndex);
+					// 親ノードを展開する
+					if (objNode.Parent != null)
 					{
-						objRoot.ExpandAll();
+						objNode.Parent.ExpandAll();
 					}
-
-					objRoot = objNode;// ノードを子パスに切り替える
+					objRoot = objNode.Nodes;// ノードを子パスに切り替える
 
 				}
 				else
 				{
 					objNode = objFind[0];
-					objNode.ExpandAll();
-					objRoot = objNode; // 見つけたノードの子パスをルートにする
+					objRoot = objNode.Nodes; // 見つけたノードの子パスをルートにする
 
 				}
 

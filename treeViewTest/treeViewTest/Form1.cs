@@ -54,19 +54,22 @@ namespace treeViewTest
 		private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
 		{
 			txtEdit.Text = treeViewEx1.SelectedNode.FullPath+"\\";
+			toolLabel.Text = treeViewEx1.SelectedNode.FullPath + "\\";
 		}
 		// 検索ボタンを押した時 
 		private void btnSearch_Click(object sender, EventArgs e)
 		{
-			TreeNode res = treeViewEx1.FindNode( txtEdit.Text);
-			if(res == null)
+			TreeNode objNode = treeViewEx1.FindNode( txtEdit.Text);
+			if(objNode == null)
 			{
-				toolLabel.Text = ("見つかりません");
+				toolLabel.Text = "見つかりません";
 			}
 			else
 			{
-				treeViewEx1.SelectedNode = res;
+				// 選択状態にする
+				treeViewEx1.SelectedNode = objNode;
 				treeViewEx1.Select();
+				toolLabel.Text = objNode.FullPath;
 
 			}
 		}
@@ -79,7 +82,7 @@ namespace treeViewTest
 			TreeNode res =treeViewEx1.FindNode(strPath);
 			if (res != null)
 			{
-				toolLabel.Text = ("すでに存在します");
+				toolLabel.Text = "すでに存在します";
 			}
 			else
 			{
@@ -96,12 +99,13 @@ namespace treeViewTest
 		{
 			string strPath = txtEdit.Text;
 			TreeNode objNode = treeViewEx1.FindNode(strPath);
-			bool bDelSub = true;
-			if(objNode.Nodes.Count > 0)
+			bool bDelSub = objNode != null; // 見つからなかったらfalse
+			if(bDelSub && objNode.Nodes.Count > 0) // 見つかった場合で、子ノードが存在する場合
 			{
-				bDelSub = (MessageBox.Show("一緒に削除しますか？", "子ノードが存在します", MessageBoxButtons.YesNo) == DialogResult.Yes);
+				bDelSub = (MessageBox.Show("一緒に削除しますか？", "子ノードが存在します", MessageBoxButtons.YesNo)
+							== DialogResult.Yes);
 			}
-			if(bDelSub)
+			if(bDelSub) // 削除
 			{
 				objNode.Remove();
 				toolLabel.Text = "削除しました。";
